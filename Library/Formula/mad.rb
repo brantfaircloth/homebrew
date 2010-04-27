@@ -25,7 +25,11 @@ Cflags: -I${includedir}
   end
 
   def install
+    # build verbosely so we can debug better
     system "./configure --disable-debugging --enable-fpm=intel --prefix='#{prefix}'"
+    inreplace "Makefile" do |s|
+        s.remove_make_var! %w{CFLAGS LDFLAGS}
+    end
     system "make install"
 
     (lib+'pkgconfig'+'mad.pc').write mad_pc
